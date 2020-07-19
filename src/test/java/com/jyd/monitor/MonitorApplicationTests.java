@@ -1,4 +1,4 @@
-package com.zynly.monitor;
+package com.jyd.monitor;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

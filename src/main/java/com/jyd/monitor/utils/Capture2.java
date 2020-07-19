@@ -1,4 +1,4 @@
-package com.zynly.monitor.utils;
+package com.jyd.monitor.utils;
 
 import org.bytedeco.javacv.*;
 
@@ -6,7 +6,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 public class Capture2 {
     /**
@@ -49,7 +48,7 @@ public class Capture2 {
     }
 
     public static void getFile() throws IOException {
-        FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber("rtmp://58.200.131.2:1935/livetv/hunantv");
+        FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber("http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8");
 
       /*  frameGrabber.setFrameRate(100);
         frameGrabber.setFormat("h264");
@@ -87,7 +86,7 @@ public class Capture2 {
 
             if (frame!=null){
                 BufferedImage bufferedImage = converter.convert(frame);
-                File file = new File("D:/TEST.jpg");
+                File file = new File("D:/TEST3.jpg");
                 ImageIO.write(bufferedImage, "jpg", file);
             }
         }
