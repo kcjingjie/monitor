@@ -1,0 +1,392 @@
+html, body {
+    scrollbar-track-color: #062f67;
+    scrollbar-base-color: #4fe7fe;
+    overflow:hidden;
+    color: white;
+	background-image: url(../image/table/backgroud.png);
+  	height:100%;
+  	background-size: 100% 100%;
+}
+
+/*查询条件div，跳转div*/
+.param,.jumptext{
+ 	float:left;
+ }
+/*查询条件输入框*/
+.form-inline .form-control{
+ 	color: white;
+	background-color: #0d2a56;
+	border:none;
+ }
+.form-inline .param{
+	height:34px;
+ }
+/*查询按钮*/
+#search,#export{
+   	background: url(../image/table/searchbtn.png);
+   	width:50px; 
+   	height:30px;
+   	border:none;
+   	vertical-align:top;
+   	color:#000000;
+   	margin-right:15px;
+   	float:right;
+   	margin-bottom: 3px;
+}
+ /*表格*/
+.fixed-table-toolbar .bs-bars, .fixed-table-toolbar .search, .fixed-table-toolbar .columns{
+   	width:100%;
+}
+/*加载中样式 */
+.fixed-table-loading {
+	/*top: 45% !important;*/
+	padding-top:15%;
+	background-color: transparent;
+	color:#547aa6; 
+}
+   /*表头字体颜色*/
+.th-inner {
+	color:#4fe7fe;
+}
+/*表格内字体居中*/
+.table>tbody>tr>td {
+    text-align: center;
+    border-color: #000000;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	text-overflow: ellipsis;
+   /* height:31px;*/
+ }
+ /*表格边框*/   
+ .bootstrap-table .table thead>tr>th {
+     text-align: center;
+     border-color:#000000;
+ }
+ /*选中行变色*/
+ .changeColor{
+ 	 background-color: #1383e7  !important;
+     color: white;
+ }
+ /*表格颜色*/
+ .table>thead{
+ 	background-color: #0d265c;
+ }
+ /*斑马线颜色*/
+.table-striped > tbody > tr:nth-of-type(odd){
+   	background-color: rgba(19,131,231,0.4); 
+}
+.table-striped > tbody > tr{
+	background-color: rgba(19,131,231,0.3);
+}
+.table-hover>tbody>tr:hover {
+    background-color: rgba(19,131,231,0.6);
+}
+.fixed-table-container{
+	border:none;
+}
+/*查询条件字体颜色*/
+.param>span{
+   	color:#5f92d4 !important;
+   	margin-left:10px;
+}
+
+/*下拉框箭头替换*/
+.form-control.select{
+	 padding: 0 5px;
+	 -webkit-appearance: none;
+	 -moz-appearance: none;
+	 /*用图片替换*/
+	 background: url("../image/table/down.png") no-repeat scroll right 5px center transparent;
+	 background-color:#0d2a56;
+	 background-size: 10px;
+}
+
+ 
+/*表格底部div*/
+.bottomdiv{
+   	width:100%;
+   	height:30px;
+   	position: absolute;
+   	bottom: 15px;
+   	user-select: none;
+}
+.bottomLeft{
+	float: left; 
+	width: 20%; 
+	margin-left: 20px;
+	line-height: 20px;
+}
+.bottomCenter{
+	float: right;
+	margin-right:10px;
+}
+.bottomRight{
+	float: right;
+	margin-right:30px;
+}
+#pages{
+	float: left;
+	margin-top: 6px;
+	margin-right: 5px;
+}
+/*按钮*/
+button{
+	outline:none;/*点击无边框*/
+	user-select: none;
+}
+
+.buttonPrev{
+	background: url(../image/table/prev.png);
+	width:30px;
+	height:30px;
+	border:none;
+}
+.buttonNext{
+	background: url(../image/table/next.png);
+	width:30px;
+	height:30px;
+	border:none;
+}
+.buttonPrevw{
+	background: url(../image/table/prevw.png);
+	width:30px;
+	height:30px;
+	border:none;
+	pointer-events:none;
+	vertical-align:top;
+}
+.buttonNextw{
+	background: url(../image/table/nextw.png);
+	width:30px;
+	height:30px;
+	border:none;
+	pointer-events:none;
+	vertical-align:top;
+}
+/*跳转按钮*/
+.jumpshow{
+   	background: url(../image/table/btn.png);
+   	width:50px; 
+   	height:30px;
+   	border:none;
+   	vertical-align:top;
+   	color:#000000;
+}
+
+/*底部功能按钮*/
+.btnstyle{
+   	background: url(../image/table/searchbtn.png) no-repeat;
+   	width:auto; 
+   	height:30px;
+   	border:none;
+   	vertical-align:top;
+   	background-size: cover;
+   	play: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+	touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 4px;
+    color:#000000;
+}
+/*跳转弹出div*/
+.jumpdiv{
+ 	 display:none;
+ 	 width: 164px;
+	 height: 40px;
+	 bottom: 50px;
+	 position: absolute;
+	 float: right;
+	 right: 20px;
+	 background-color: #01172c;
+	 border: 1px solid #0571a2;
+ }
+/*跳转确定按钮*/
+.confirm{
+ 	background: url(../image/table/searchbtn.png);
+ 	width:40px; 
+ 	height:25px;
+ 	border:none;
+ 	vertical-align:top;
+ 	color:#000000;
+ 	margin-right:10px;
+ 	float:left;
+ 	margin-top:6px;
+}
+/*跳转页码输入框*/
+.page_input{
+  height: 23px;
+  width: 23px;
+  text-align: center;
+  border: none;
+  margin-top: 9px;
+  float:left;
+  background-color:#0d2a56;
+}
+
+/*弹出框*/
+.form-group>label{
+  	color:#00cdfc;
+}
+.form-control{
+ 	color: white;
+	background-color: #0d2a56;
+	border:none;
+}
+/*模态框*/
+.modal-content{
+ /*用图片替换*/
+  background: url("../image/table/modalbcg.png");
+  background-size:100% 100%;
+}
+  /*提交按钮*/
+.submitbtn {
+     width:100px;
+	 color: #000000;
+	 background-color: #37d4fd;
+	 display: inline-block;
+	 padding: 6px 12px;
+	 margin-bottom: 5px;
+	 font-size: 14px;
+	 font-weight: normal;
+	 user-select: none;
+	 border: 1px solid transparent;
+	 border-radius: 4px;
+	 outline:none;
+  }
+.closee{
+  	 background: url("../image/table/close.png") no-repeat;
+	 width: 25px;
+	 height: 25px;
+	 position: relative;
+	 /*padding-right:6%;*/
+	 margin-top:2%;
+	 cursor:pointer;
+	 float: right;
+     z-index: 1;
+  }
+  /*首行提示*/
+.modal-title {
+    margin: 0;
+    width: 200px;
+    margin-top: 2%;
+   /* margin-left: 3%;*/
+}
+/*模态框背景透明*/
+.modal-content {
+  border: 1px solid rgba(0, 0, 0, 0);
+  box-shadow: 0 3px 9px rgba(0, 0, 0,0);
+ }
+ 
+ /*遮罩层*/
+.modal-backdrop {
+	opacity: 0.9!important;
+	background-color:#00162c;
+}
+/*打开模态框后底部表格样式*/
+.modal-open{
+	padding-right:5px !important;
+}
+
+ input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+     -webkit-transition-delay: 99999s;
+     -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
+}
+
+/*自动补齐文本框*/
+.dropdown-menu{
+	background-color:#0d2a56;
+	color:#fff;
+	max-height:260px;
+	overflow-y:auto;
+}
+.dropdown-menu > li > a{
+	color:#fff;
+}
+.table > thead > tr > th, 
+.table > tbody > tr > th, 
+.table > tfoot > tr > th, 
+.table > thead > tr > td, 
+.table > tbody > tr > td, 
+.table > tfoot > tr > td{
+	    padding: 6px !important;
+}
+.fixed-table-container thead th .th-inner, 
+.fixed-table-container tbody td .th-inner{
+		padding: 4px !important;
+}
+
+.headDiv {
+    height: 40px;
+    width: 100%;
+    background-image: url(../image/systemOverview/head.png);
+}
+.borderDiv {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    border-width: 1px;
+    border-color: #244e99;
+    border-radius: 3px;
+    border-style: solid;
+    vertical-align: middle;
+}
+.headFont {
+    font-size: 16px;
+    line-height: 40px;
+    color: rgba(19,131,231);
+}
+.fixed-table-toolbar .bs-bars{
+	margin-top: 0px;
+	margin-bottom: 0px; 
+	background-color:#00162b;
+}
+#toolbar{
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+::-webkit-scrollbar { /*滚动条整体样式*/
+    width: 10px !important;; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 8px !important;;
+    background: #ffffff !important;;
+    cursor: pointer !important;
+
+}
+/*滚动条样式*/
+::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+    border-radius: 7px !important;
+    -webkit-box-shadow: inset 0 0 5px rgba(240, 240, 240, .5) !important;;
+    background: #32ccfe !important;
+    cursor: pointer !important;
+}
+
+::-webkit-scrollbar-track { /*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(240, 240, 240, .5) !important;;
+    border-radius: 0 !important;;
+    background: #0d2a56 !important;;
+    cursor: pointer !important;
+}
+.datetimepicker table {
+    color: #04ddff;
+}
+
+.datetimepicker table tr td.day span:hover {
+    background: #428bca;
+}
+
+.datetimepicker table tr td span:hover {
+    background: #428bca;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+	background-color:#0d2a56;
+}
