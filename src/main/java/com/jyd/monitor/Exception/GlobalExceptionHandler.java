@@ -2,13 +2,14 @@ package com.jyd.monitor.Exception;
 
 import com.jyd.monitor.pojo.ResultBody;
 import org.apache.log4j.Logger;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 全局异常
  */
-
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = Logger.getLogger(GlobalExceptionHandler.class);
