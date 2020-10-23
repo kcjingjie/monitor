@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<link type="text/css" href="../viewcss/index.css" rel="stylesheet"/>
+<script src="../scripts/jquery.js"></script>
+<script src="../js/index.js"></script>
+<body>
+    <div class="content">
+        <div class="header">
+            <div class="tabs">
+                <div class="tab_one text-center" onclick="tabClick('one')">
+                    <img src="../images/alarm.png" style="height: 100%;height: 24px;"/><br/>
+                    <span>违章监控</span>
+                </div>
+                <div class="tab_two text-center" onclick="tabClick('two')">
+                    <img src="../images/alarmrecord.png" style="height: 100%;height: 24px;"/><br/>
+                    <span>告警记录</span>
+                </div>
+            </div>
+        </div>
+        <div class="content_iframe">
+            <iframe id="contentFrame" src="monitor.html" height="100%" width="100%" allowtransparency="true" frameborder="no"></iframe>
+        </div>
+    </div>
+</body>
+</html>

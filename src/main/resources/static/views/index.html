@@ -2,28 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>首页</title>
+    <title>实时监控</title>
 </head>
-<link type="text/css" href="../viewcss/index.css" rel="stylesheet"/>
-<script src="../sciprts/jquery.js"></script>
-<script src="../js/index.js"></script>
+<link rel="stylesheet" href="../viewcss/monitor.css"/>
+<link rel="stylesheet" href="../css/bootstrap.css">
+<!-- If you'd like to support IE8 -->
+<script src="../scripts/jquery.js"></script>
+<script src="../scripts/bootstrap.js"></script>
+<script src="../js/ezuikit.js"></script>
+
 <body>
-    <div class="content">
-        <div class="header">
-            <div class="tabs">
-                <div class="tab_one text-center" onclick="tabClick('one')">
-                    <img src="../images/alarm.png" style="height: 100%;height: 24px;"/><br/>
-                    <span>违章监控</span>
+<div class="videoContent">
+    <div class="head"></div>
+    <div>
+        <div class="videoSingle row">
+            <div class="video col-md-4 col-lg-4">
+                <div class="input-group">
+                    <input type="text" id="url1" class="form-control" placeholder="播放地址">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="button" onclick="playVideo(1)">播放</button>
+                     </span>
+                </div><!-- /input-group -->
+                <div style="height: 100%;width: 100%;position: relative;">
+                    <div id="playercontainer1"></div>
+                    <canvas id="myCanvas" style="position: absolute;height: 100%;top: 0;width: 100%"></canvas>
                 </div>
-                <div class="tab_two text-center" onclick="tabClick('two')">
-                    <img src="../images/alarmrecord.png" style="height: 100%;height: 24px;"/><br/>
-                    <span>告警记录</span>
+            </div>
+            <div class="video col-md-4 col-lg-4">
+                <div class="input-group">
+                    <input type="text" id="url2" class="form-control" placeholder="播放地址">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="button" onclick="playVideo(2)">播放</button>
+                         </span>
+                </div><!-- /input-group -->
+                <div style="height: 100%;width: 100%;">
+                    <div id="playercontainer2"></div>
+                </div>
+            </div>
+            <div class="video col-md-4 col-lg-4">
+                <div class="input-group">
+                    <input type="text" id="url3" class="form-control" placeholder="播放地址">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="button" onclick="playVideo(3)">播放</button>
+                     </span>
+                </div><!-- /input-group -->
+                <div style="height: 100%;width: 100%;">
+                    <div id="playercontainer3"></div>
                 </div>
             </div>
         </div>
-        <div class="content_iframe">
-            <iframe id="contentFrame"src="monitor.html" height="100%" width="100%"  allowtransparency="true" frameborder="no"></iframe>
-        </div>
+        <div class="videoTogether"></div>
     </div>
+</div>
 </body>
 </html>
+<script>
+    var canvas;
+    var cxt;
+    function handleError(e){
+        console.log('捕获到错误',e);
+    }
+    function handleSuccess(){
+        console.log("播放成功回调函数，此处可执行播放成功后续动作");
+    }
+    function getToken() {
+            var token = '';
+            $.ajax({
+                url: "https://open.ys7.com/api/lapp/token/get",
+                type: 'POST',
+                async:false,
+                data: {
+                    appKey:'04dd4edbcc944faea177776aad714b72',
+                    appSecret:'dbc1b753f17d66986b776c7bb9a41622'
+                },
+                success: function (data) {
+                    console.log(data);
+                    if(data.code == '200'){
+                        token = data.data.accessToken
+                    }else if(data.code == "111001"){
+                        return false;
+                    } else {
+
+                    }
+                },
+                error: function(err){
+
+                }
+            })
+        //return 'ra.4iqnlesz1uy22y8612w2kk8l2zwf0v34-5tpezsnoux-14mjpj7-fiihjxsow';
+        return token;
+    }
+
+    function playVideo(num){
+        var url = $('#url'+num).val().trim();
+        var token = getToken();
+        var container = document.getElementById("playercontainer1");
+        var containerWidth = container.offsetWidth;
+        var containerHeight = container.offsetWidth*4/6;
+        var decoder = new EZUIKit.EZUIPlayer({
+            id: 'playercontainer'+num,
+            autoplay: true,
+            url: url,
+            accessToken: token,
+            decoderPath: '',
+            width: containerWidth,
+            height:containerHeight,
+            handleError: handleError,
+            handleSuccess: handleSuccess,
+        });
+        decoder.play({
+            handleError: handleError
+        });
+        initCanvas();
+    }
+    var websocket;
+    // 首先判断是否 支持 WebSocket
+    if('WebSocket' in window) {
+        websocket = new WebSocket("ws://127.0.0.1:8000/server");
+    } else if('MozWebSocket' in window) {
+        websocket = new MozWebSocket("ws://127.0.0.1:8000/server");
+    } else {
+        websocket = new SockJS("ws://127.0.0.1:8000/server");
+    }
+    websocket.onopen = function(evnt) {
+        console.log('ws clint:open websocket');
+        //发送消息 
+        var obj = { "msgContent": "dran", "sex": "man" };
+        var jstring = JSON.stringify(obj) ;
+        console.log('ws clint:send msg:'+jstring)
+        websocket.send(jstring);
+    };
+    websocket.onmessage = function (evnt) {
+        if(evnt.data=="成功建立socket连接"){
+
+        }
+        console.log('数据已接收:'+evnt.data.detect);
+        var data = $.parseJSON(event.data);
+        if (data.detect != null && data.detect.length>0){
+            drawArea(data);
+        }
+    };
+    websocket.onerror = function (evnt) {
+        console.log('ws client:error '+evnt);
+    };
+    websocket.onclose = function (evnt) {
+        console.log('ws clent:close ')
+    }
+    function initCanvas() {
+        canvas = document.getElementById("myCanvas");
+        cxt=canvas.getContext("2d");
+    }
+    function drawArea(data) {
+        cxt.strokeStyle="#FF0000";
+        cxt.moveTo(10,10);
+        cxt.lineTo(30,10);
+        cxt.lineTo(40,20);
+        cxt.lineTo(10,10);
+        cxt.stroke();
+        //根据比例来
+        /*for (var i=0;i<data.detect.polygon.length;i++){
+
+        }*/
+    }
+    function calcDis(num) {
+
+    }
+</script>
