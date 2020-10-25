@@ -163,6 +163,14 @@
     }
 
     function drawArea(data) {
+        var canvas = document.getElementById("myCanvas");
+        var canvasWidth = canvas.offsetWidth;
+        var canvasHeight = canvas.offsetWidth * 4 / 6;
+        canvas.height = 0;
+        canvas.width = 0
+        canvas.height =canvasHeight;
+        canvas.width = canvasWidth;
+        cxt.clearRect(0, 0, canvasWidth, canvasHeight);
         cxt.strokeStyle = "#FF0000";
         //根据比例来
         var container = document.getElementById("playercontainer1");
@@ -177,4 +185,9 @@
         }
         cxt.stroke();
     }
+    
+    function clearCanvas() {
+
+    }
+    
 </script>
