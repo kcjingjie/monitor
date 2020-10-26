@@ -5,7 +5,4 @@ package com.jyd.monitor;
  */
 public class Spider {
 
-
-
-
 }
