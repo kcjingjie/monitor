@@ -4,23 +4,65 @@
     background: url("../images/head.png");
     background-size: 100% 100%;
 }
+
+.head h1 {
+	float: right;
+	margin-right: 200px;
+	color: #ffffff;
+	line-height: 160px;
+	font-size: 60px;
+}
+
+#div-condition {
+	width: 80%;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
 .div_query {
     float: left;
-    margin-right: 20px;
+    margin-right: 10px;
 }
+
+#detectType {
+	height: 26px;
+	width: 100px;
+}
+
+#time1, #time2 {
+	width: 150px;
+}
+
+.div_query button {
+	height: 26px;
+	width: 60px;
+	line-height: 15px;
+}
+
 #news_table{
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
+	margin-top: 20px;
 }
 #page {
     width: 100%;
     padding-bottom: 10px;
     margin-top: 10px;
 }
-td{
+
+tbody tr td {
     border: 1px solid transparent !important;
     cursor: pointer;
+	line-height: 75px !important;
+	height: 100px;
 }
+
+.btn-video {
+	width: 60px;
+	height: 26px;
+	line-height: 14px !important;
+}
+
 .table_header{
     clear: both;
     height: 40px;

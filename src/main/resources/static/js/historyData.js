@@ -39,13 +39,13 @@ var historyData = {
         var columns = [{
             field: 'sequence',
             title: '序号',
-            width: '10%',
-            align: 'center',
+            width: '5%',
+            align: 'center'
         }, {
             field: 'imageUrl',
             align: 'center',
             title: '告警图片',
-            width: '10%',
+            width: '20%',
             formatter: function (value, row, index) {
                 var html = '<div class="div-news-button">' +
                     '<img src="' + value + '" width="100px" height="80px"/>'
@@ -55,8 +55,8 @@ var historyData = {
         }, {
             field: 'detectType',
             title: '告警类型',
-            width: '20%',
-            align: 'center',
+            width: '15%',
+            align: 'center'
         }, {
             field: 'detectContent',
             title: '告警内容',
@@ -66,23 +66,21 @@ var historyData = {
             field: 'deviceId',
             title: '摄像头编号',
             align: 'center',
-            width: '10%',
+            width: '10%'
         }, {
             field: 'updateTime',
             title: '告警时间',
             align: 'center',
-            width: '20%',
+            width: '20%'
         }, {
             field: 'publishInfo',
             title: '视频',
             align: 'center',
             width: '10%',
             formatter: function (value, row, index) {
-                var html = '<div class="div-news-button">' +
-                    '<button type="button" class="btn-daily">视频</button>'
-                '</div>';
+                var html = '<button type="button" class="btn-video btn btn-success">视频</button>';
                 return html;
-            },
+            }
         }
         ];
 
