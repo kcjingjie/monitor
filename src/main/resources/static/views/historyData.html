@@ -24,7 +24,7 @@
     <!--图片-->
     <div class="head"></div>
     <!--查询条件-->
-    <div>
+    <div style="width: 70%;margin: 0 auto;margin-top: 30px;">
         <div>
             <div class="div_query"><span>摄像头编号:</span><input type="text" id="deviceId"/></div>
             <div class="div_query"><span>告警类型:</span>
@@ -58,6 +58,16 @@
     <!--分页插件-->
     <div id="page">
         <div id="myPage" style="text-align: center;"></div>
+    </div>
+    <!--图片的模态框-->
+    ﻿<div id="ShowImage_Form" class="modal fade">
+        <div class="modal-header">
+            <button data-dismiss="modal" class="close" type="button"></button>
+        </div>
+        <div class="modal-body">
+            <div id="img_show">
+            </div>
+        </div>
     </div>
 </body>
 <script src="../js/historyData.js"></script>

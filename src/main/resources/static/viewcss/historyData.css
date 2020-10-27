@@ -8,6 +8,10 @@
     float: left;
     margin-right: 20px;
 }
+#news_table{
+    width: 70%;
+    margin: 0 auto;
+}
 #page {
     width: 100%;
     padding-bottom: 10px;
