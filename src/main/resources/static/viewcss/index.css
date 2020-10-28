@@ -8,6 +8,13 @@ html,body{
     background: url("../images/head.png");
     background-size: 100% 100%;
 }
+.head h1 {
+    float: right;
+    margin-right: 200px;
+    color: #ffffff;
+    line-height: 160px;
+    font-size: 60px;
+}
 .videoContent {
     height: 100%;
     width: 100%;
@@ -63,4 +70,26 @@ html,body{
 }
 .video {
     height: 100%;
+}
+.input-group {
+    margin-bottom: 10px;
+}
+.div_bottom {
+    height: 300px;
+}
+.div_bottom_left {
+
+}
+.div_bottom_right {
+
+}
+.div_bottom_img {
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.bottom_img {
+    width: 300px;
+    height:200px;
+    margin-right: 10px;
 }

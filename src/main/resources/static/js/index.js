@@ -1,5 +1,9 @@
-var canvas;
-var cxt;
+var canvas,canvas2,canvas3;
+//声明下面的cxt
+var cxt1;
+var cxt2;
+var cxt3;
+
 initContainer();
 function initContainer() {
     var container = document.getElementById("playercontainer1");
@@ -44,8 +48,8 @@ function getToken() {
 
         }
     })
-    //return 'ra.4iqnlesz1uy22y8612w2kk8l2zwf0v34-5tpezsnoux-14mjpj7-fiihjxsow';
-    return token;
+    return 'ra.0ujl1qgjd7dgeb460r1vw8dxc3fjpyzk-1sdfy728u9-1cgbj8l-3zduoaeis';
+    //return token;
 }
 
 function playVideo(num) {
@@ -68,7 +72,7 @@ function playVideo(num) {
     decoder.play({
         handleError: handleError
     });
-    initCanvas();
+    initCanvas(num);
 }
 
 var websocket;
@@ -89,7 +93,7 @@ websocket.onopen = function (evnt) {
     console.log('ws clint:send msg:' + jstring)
     websocket.send(jstring);
 };
-
+//websocket 接受消息
 websocket.onmessage = function (evnt) {
     if (evnt.data == "成功建立socket连接") {
 
@@ -108,36 +112,59 @@ websocket.onerror = function (evnt) {
 websocket.onclose = function (evnt) {
     console.log('ws clent:close ')
 }
+//根据编号初始化canvas
+function initCanvas(num) {
+    if (num == 1){
+        canvas = document.getElementById("canvas"+num);
+        cxt1 = canvas.getContext("2d");
+    } else if (num == 2 ){
+        canvas2 = document.getElementById("canvas"+num);
+        cxt2 = canvas2.getContext("2d");
+    }else {
+        canvas3 = document.getElementById("canvas"+num);
+        cxt3 = canvas3.getContext("2d");
+    }
 
-function initCanvas() {
-    canvas = document.getElementById("myCanvas");
-    cxt = canvas.getContext("2d");
 }
-
+//根据设备编号画canvas
 function drawArea(data) {
-    var canvas = document.getElementById("myCanvas");
+    var index = 0;
+    var tempCxt;
+    if (data.deviceId != ''){
+        for (var i =1;i<4;i++){
+            var playUrl = $('#url'+i).val();
+            if (playUrl.indexOf(data.deviceId)>-1){
+                index = i;
+                if (index == 1){
+                    tempCxt = cxt1;
+                } else if (index == 2 ){
+                    tempCxt = cxt2;
+                }else {
+                    tempCxt = cxt3;
+                }
+                break;
+            }
+        }
+    }
+    var canvas = document.getElementById("canvas"+index);
     var canvasWidth = canvas.offsetWidth;
     var canvasHeight = canvas.offsetWidth * 4 / 6;
     canvas.height = 0;
-    canvas.width = 0
+    canvas.width = 0;
     canvas.height =canvasHeight;
     canvas.width = canvasWidth;
-    cxt.clearRect(0, 0, canvasWidth, canvasHeight);
-    cxt.strokeStyle = "#FF0000";
+    tempCxt.clearRect(0, 0, canvasWidth, canvasHeight);
+    tempCxt.strokeStyle = "#FF0000";
     //根据比例来
     var container = document.getElementById("playercontainer1");
     var width = container.offsetWidth;
     var height = container.offsetWidth * 4 / 6;
     for (var i = 0; i < data.detect.length; i++) {
-        cxt.moveTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
+        tempCxt.moveTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
         for (var j = 0; j < data.detect[i].polygon.count; j++) {
-            cxt.lineTo(data.detect[i].polygon.position[j*2] / 100 * width, data.detect[i].polygon.position[j*2+1] / 100 * height);
+            tempCxt.lineTo(data.detect[i].polygon.position[j*2] / 100 * width, data.detect[i].polygon.position[j*2+1] / 100 * height);
         }
-        cxt.lineTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
+        tempCxt.lineTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
     }
-    cxt.stroke();
-}
-
-function clearCanvas() {
-
+    tempCxt.stroke();
 }

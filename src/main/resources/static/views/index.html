@@ -13,19 +13,21 @@
 
 <body>
 <div class="videoContent">
-    <div class="head"></div>
-    <div>
+    <div class="head">
+        <h1>视频安监</h1>
+    </div>
+    <div style="margin-top: 20px;">
         <div class="videoSingle row">
             <div class="video col-md-4 col-lg-4">
                 <div class="input-group">
-                    <input type="text" id="url1" class="form-control" placeholder="播放地址">
+                    <input  type="text" id="url1" class="form-control" placeholder="播放地址">
                     <span class="input-group-btn">
                          <button class="btn btn-default" type="button" onclick="playVideo(1)">播放</button>
                      </span>
                 </div><!-- /input-group -->
                 <div style="height: 100%;width: 100%;position: relative;">
                     <div id="playercontainer1" style="background-color: #000"></div>
-                    <canvas id="myCanvas" style="position: absolute;height: 100%;top: 0;width: 100%"></canvas>
+                    <canvas id="canvas1" style="position: absolute;height: 100%;top: 0;width: 100%"></canvas>
                 </div>
             </div>
             <div class="video col-md-4 col-lg-4">
@@ -37,6 +39,7 @@
                 </div><!-- /input-group -->
                 <div style="height: 100%;width: 100%;">
                     <div id="playercontainer2" style="background-color: #000"></div>
+                    <canvas id="canvas2" style="position: absolute;height: 100%;top: 0;width: 100%"></canvas>
                 </div>
             </div>
             <div class="video col-md-4 col-lg-4">
@@ -48,8 +51,25 @@
                 </div><!-- /input-group -->
                 <div style="height: 100%;width: 100%;">
                     <div id="playercontainer3" style="background-color: #000"></div>
+                    <canvas id="canvas3" style="position: absolute;height: 100%;top: 0;width: 100%"></canvas>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="div_bottom">
+        <div class="div_bottom_left">
+            <div class="div_bottom_img">
+                <img class="bottom_img" src="http://localhost:8001/images/map.jpeg"/>
+            </div>
+            <div class="div_bottom_img">
+                <img class="bottom_img" src="http://localhost:8001/images/map.jpeg"/>
+            </div>
+            <div class="div_bottom_img">
+                <img class="bottom_img" src="http://localhost:8001/images/map.jpeg"/>
+            </div>
+        </div>
+        <div class="div_bottom_right">
+
         </div>
     </div>
 </div>
