@@ -1,8 +1,14 @@
 var canvas,canvas2,canvas3;
+//decoder
+var decoder1,decoder2,decoder3;
 //声明下面的cxt
 var cxt1;
 var cxt2;
 var cxt3;
+//更改图片的下标
+var changeIndex = 0;
+//滚动的dv
+var $dList = $('.div_scroll');
 
 initContainer();
 function initContainer() {
@@ -37,7 +43,7 @@ function getToken() {
         success: function (data) {
             console.log(data);
             if (data.code == '200') {
-                token = data.data.accessToken
+                token = data.data.accessToken;
             } else if (data.code == "111001") {
                 return false;
             } else {
@@ -48,17 +54,21 @@ function getToken() {
 
         }
     })
-    return 'ra.0ujl1qgjd7dgeb460r1vw8dxc3fjpyzk-1sdfy728u9-1cgbj8l-3zduoaeis';
-    //return token;
+    //return 'ra.0ujl1qgjd7dgeb460r1vw8dxc3fjpyzk-1sdfy728u9-1cgbj8l-3zduoaeis';
+    return token;
 }
 
 function playVideo(num) {
     var url = $('#url' + num).val().trim();
+    if (url == ''){
+        toastr.warning('播放地址不能为空!');
+        return;
+    }
     var token = getToken();
     var container = document.getElementById("playercontainer1");
     var containerWidth = container.offsetWidth;
     var containerHeight = container.offsetWidth * 4 / 6;
-    var decoder = new EZUIKit.EZUIPlayer({
+     var tempDecoder = new EZUIKit.EZUIPlayer({
         id: 'playercontainer' + num,
         autoplay: true,
         url: url,
@@ -69,9 +79,16 @@ function playVideo(num) {
         handleError: handleError,
         handleSuccess: handleSuccess,
     });
-    decoder.play({
+    tempDecoder.play({
         handleError: handleError
     });
+    if (num == 1 ){
+        decoder1 = tempDecoder;
+    }else if(num==2){
+        decoder2 = tempDecoder;
+    }else {
+        decoder3 = tempDecoder;
+    }
     initCanvas(num);
 }
 
@@ -102,6 +119,8 @@ websocket.onmessage = function (evnt) {
     var data = $.parseJSON(event.data);
     if (data.detect != null && data.detect.length > 0) {
         drawArea(data);
+        changeBottomImg(data);
+        changeRealTimeViolation(data);
     }
 };
 
@@ -110,7 +129,7 @@ websocket.onerror = function (evnt) {
 };
 
 websocket.onclose = function (evnt) {
-    console.log('ws clent:close ')
+    console.log('ws clent:close ');
 }
 //根据编号初始化canvas
 function initCanvas(num) {
@@ -159,6 +178,11 @@ function drawArea(data) {
     var container = document.getElementById("playercontainer1");
     var width = container.offsetWidth;
     var height = container.offsetWidth * 4 / 6;
+    var videoTime = getOSDTime(index);
+    //这里判断视频的时间和监测的时间匹配度 5秒
+    if (videoTime > data.detectTime){
+
+    }
     for (var i = 0; i < data.detect.length; i++) {
         tempCxt.moveTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
         for (var j = 0; j < data.detect[i].polygon.count; j++) {
@@ -167,4 +191,99 @@ function drawArea(data) {
         tempCxt.lineTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
     }
     tempCxt.stroke();
+}
+//更改下面的图片
+function changeBottomImg(){
+
+    $.ajax({
+        url: "http://127.0.0.1:8000/smartsafe/getBottomImage",
+        type: 'get',
+        async: false,
+        success: function (data) {
+            if (data.data!=null && data.success==true){
+                for (var i=0;i<data.data.length;i++){
+                    $('#bottom_img'+(i+1)).attr('src',data.data[i].imageUrl);
+                }
+            }
+        },
+        error: function (err) {
+
+        }
+    })
+}
+//更改实时告警列表
+function changeRealTimeViolation(data){
+    scrollDiv(data);
+}
+//滚动动画
+function scrollDiv(data) {
+    //获取div高度
+    var length = $(".div_scroll").children().length;
+    if (length>=6){
+        var scrollHeight = $('.div_scroll div:first').height();
+        //滚出一个li的高度
+        $dList.stop().animate({marginTop:-scrollHeight},600,function () {
+            //动画结束后
+            var a=document.getElementsByClassName("div_scroll");
+            var b=document.getElementsByClassName("realTimeViolation");
+            //默认是从下标0开始，想要移除第二个就是a[1].remove();
+            b[0].remove();
+            $dList.css("marginTop",0);
+            var tempString = '';
+            if (data.detect!=null && data.detect.length>0){
+                for (var i=0;i<data.detect.length;i++){
+                    tempString =  data.detect.type+tempString;
+                }
+            }
+            $dList.append("<div class='realTimeViolation'><span>"+"设备 "+data.deviceId+"发生"+"</span><button class='btn btn-default btn_bottom' type='button'>进入</button></div>");
+        })
+    }else {
+        var tempString = '';
+        if (data.detect!=null && data.detect.length>0){
+            for (var i=0;i<data.detect.length;i++){
+                tempString = data.detect.type+tempString;
+            }
+        }
+        $dList.append("<div class='realTimeViolation'><span>"+"设备 "+data.deviceId+"发生"+"</span><button class='btn btn-default btn_bottom' type='button'>进入</button></div>");
+
+    }
+
+
+}
+
+setInterval(clearRect,5000);
+
+function clearRect() {
+
+}
+
+//每隔5秒更新底部图片
+setInterval(changeBottomImg,5000);
+
+function getOSDTime(index){
+    console.log(new Date().getSeconds());
+    var tempDecoder;
+    if (index == 1){
+        tempDecoder = decoder1;
+    }else if( index == 2){
+        tempDecoder = decoder2;
+    }else {
+        tempDecoder = decoder3;
+    }
+    var getOSDTimePromise = tempDecoder.getOSDTime();
+    getOSDTimePromise.then(function(data){
+        console.log("getOSDTime success",data)
+        console.log(timestampToTime(data));
+    })
+    console.log(new Date().getSeconds())
+}
+function timestampToTime(timestamp) {
+    var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var m = date.getMinutes() + ':';
+    var s = date.getSeconds();
+    return Y+M+D+h+m+s;
 }

@@ -45,7 +45,7 @@ var historyData = {
             field: 'imageUrl',
             align: 'center',
             title: '告警图片',
-            width: '20%',
+            width: '30%',
             formatter: function (value, row, index) {
                 var html = '<div class="div-news-button">' +
                     '<img src="' + value + '" width="100px" height="80px"/>'
@@ -58,15 +58,10 @@ var historyData = {
             width: '15%',
             align: 'center'
         }, {
-            field: 'detectContent',
-            title: '告警内容',
-            align: 'center',
-            width: '20%'
-        }, {
             field: 'deviceId',
             title: '摄像头编号',
             align: 'center',
-            width: '10%'
+            width: '15%'
         }, {
             field: 'updateTime',
             title: '告警时间',
