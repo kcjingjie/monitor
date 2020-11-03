@@ -50,7 +50,7 @@
     margin-top: 10px;
 }
 
-tbody tr td {
+#table tbody tr td {
     border: 1px solid transparent !important;
     cursor: pointer;
 	line-height: 75px !important;
