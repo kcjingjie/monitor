@@ -27,7 +27,7 @@ function handleError(e) {
 }
 
 function handleSuccess() {
-    console.log("播放成功回调函数，此处可执行播放成功后续动作");
+    console.log("播放成功。");
 }
 
 function getToken() {
@@ -54,33 +54,40 @@ function getToken() {
 
         }
     })
-    //return 'ra.0ujl1qgjd7dgeb460r1vw8dxc3fjpyzk-1sdfy728u9-1cgbj8l-3zduoaeis';
     return token;
 }
 
 function playVideo(num) {
     var url = $('#url' + num).val().trim();
     if (url == ''){
-        toastr.warning('播放地址不能为空!');
+        toastr.warning('播放地址不能为空。');
         return;
     }
+	
+	var url1 = $('#url1').val().trim();
+	var url2 = $('#url2').val().trim();
+	var url3 = $('#url3').val().trim();
+	
+	if((url1 == url2 && url1 != '') || (url1 == url3 && url1 != '') || (url2 == url3 && url2 != ''))
+	{
+		toastr.warning('播放地址不能重复。');
+		return;
+	}
+	
     var token = getToken();
     var container = document.getElementById("playercontainer1");
     var containerWidth = container.offsetWidth;
     var containerHeight = container.offsetWidth * 4 / 6;
-     var tempDecoder = new EZUIKit.EZUIPlayer({
+    var tempDecoder = new EZUIKit.EZUIPlayer({
         id: 'playercontainer' + num,
         autoplay: true,
         url: url,
         accessToken: token,
-        decoderPath: '',
+        decoderPath: '../js',
         width: containerWidth,
         height: containerHeight,
         handleError: handleError,
-        handleSuccess: handleSuccess,
-    });
-    tempDecoder.play({
-        handleError: handleError
+        handleSuccess: handleSuccess
     });
     if (num == 1 ){
         decoder1 = tempDecoder;
@@ -112,8 +119,9 @@ websocket.onopen = function (evnt) {
 };
 //websocket 接受消息
 websocket.onmessage = function (evnt) {
-    if (evnt.data == "成功建立socket连接") {
-
+    if (evnt.data == "连接成功") {
+		console.log('websocket连接服务器成功。');
+		return;
     }
     console.log('数据已接收:' + evnt.data.detect);
     var data = $.parseJSON(event.data);
@@ -149,41 +157,47 @@ function initCanvas(num) {
 function drawArea(data) {
     var index = 0;
     var tempCxt;
-    if (data.deviceId != ''){
-        for (var i =1;i<4;i++){
-            var playUrl = $('#url'+i).val();
-            if (playUrl.indexOf(data.deviceId)>-1){
-                index = i;
-                if (index == 1){
-                    tempCxt = cxt1;
-                } else if (index == 2 ){
-                    tempCxt = cxt2;
-                }else {
-                    tempCxt = cxt3;
-                }
-                break;
+	if(!data.deviceId)
+		return
+	
+    for (var i = 1; i < 4; i++)
+    {
+        var playUrl = $('#url'+i).val();
+        if (playUrl.indexOf(data.deviceId) != -1)
+		{
+            index = i;
+            if (index == 1){
+                tempCxt = cxt1;
+            } else if (index == 2 ){
+                tempCxt = cxt2;
+            }else {
+                tempCxt = cxt3;
             }
+            break;
         }
     }
-    var canvas = document.getElementById("canvas"+index);
+	
+	if(!tempCxt)
+		return;
+	
+    var canvas = document.getElementById('canvas' + index);
     var canvasWidth = canvas.offsetWidth;
     var canvasHeight = canvas.offsetWidth * 4 / 6;
-    canvas.height = 0;
-    canvas.width = 0;
-    canvas.height =canvasHeight;
+    canvas.height = canvasHeight;
     canvas.width = canvasWidth;
     tempCxt.clearRect(0, 0, canvasWidth, canvasHeight);
     tempCxt.strokeStyle = "#FF0000";
     //根据比例来
-    var container = document.getElementById("playercontainer1");
+    var container = document.getElementById('playercontainer' + index);
     var width = container.offsetWidth;
     var height = container.offsetWidth * 4 / 6;
     var videoTime = getOSDTime(index);
     //这里判断视频的时间和监测的时间匹配度 5秒
-    if (videoTime > data.detectTime){
+    if (videoTime > data.detect.time){
 
     }
-    for (var i = 0; i < data.detect.length; i++) {
+    for (var i = 0; i < data.detect.length; i++)
+	{
         tempCxt.moveTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
         for (var j = 0; j < data.detect[i].polygon.count; j++) {
             tempCxt.lineTo(data.detect[i].polygon.position[j*2] / 100 * width, data.detect[i].polygon.position[j*2+1] / 100 * height);
@@ -235,7 +249,11 @@ function scrollDiv(data) {
                     tempString =  data.detect.type+tempString;
                 }
             }
-            $dList.append("<div class='realTimeViolation'><span>"+"设备 "+data.deviceId+"发生"+"</span><button class='btn btn-default btn_bottom' type='button'>进入</button></div>");
+			var array = [];
+			array.push("<div class='realTimeViolation'><span>设备");
+			array.push(data.deviceId);
+			array.push("发生</span><a href=''javascript:void();'>进入</a></div>")
+            $dList.append(array.join());
         })
     }else {
         var tempString = '';
@@ -244,11 +262,12 @@ function scrollDiv(data) {
                 tempString = data.detect.type+tempString;
             }
         }
-        $dList.append("<div class='realTimeViolation'><span>"+"设备 "+data.deviceId+"发生"+"</span><button class='btn btn-default btn_bottom' type='button'>进入</button></div>");
-
+        var array = [];
+        array.push("<div class='realTimeViolation'><span>设备");
+        array.push(data.deviceId);
+        array.push("发生</span><a href=''javascript:void();'>进入</a></div>")
+        $dList.append(array.join());
     }
-
-
 }
 
 setInterval(clearRect,5000);
@@ -261,7 +280,6 @@ function clearRect() {
 setInterval(changeBottomImg,5000);
 
 function getOSDTime(index){
-    console.log(new Date().getSeconds());
     var tempDecoder;
     if (index == 1){
         tempDecoder = decoder1;
@@ -271,19 +289,5 @@ function getOSDTime(index){
         tempDecoder = decoder3;
     }
     var getOSDTimePromise = tempDecoder.getOSDTime();
-    getOSDTimePromise.then(function(data){
-        console.log("getOSDTime success",data)
-        console.log(timestampToTime(data));
-    })
-    console.log(new Date().getSeconds())
-}
-function timestampToTime(timestamp) {
-    var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-    var Y = date.getFullYear() + '-';
-    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    var D = date.getDate() + ' ';
-    var h = date.getHours() + ':';
-    var m = date.getMinutes() + ':';
-    var s = date.getSeconds();
-    return Y+M+D+h+m+s;
+    return getOSDTimePromise;
 }
