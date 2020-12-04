@@ -39,13 +39,13 @@ var historyData = {
         var columns = [{
             field: 'sequence',
             title: '序号',
-            width: '5%',
+            width: '10%',
             align: 'center'
         }, {
             field: 'imageUrl',
             align: 'center',
             title: '告警图片',
-            width: '30%',
+            width: '20%',
             formatter: function (value, row, index) {
                 var html = '<div class="div-news-button">' +
                     '<img src="' + value + '" width="100px" height="80px"/>'
@@ -62,6 +62,11 @@ var historyData = {
             title: '摄像头编号',
             align: 'center',
             width: '15%'
+        },{
+            field: 'probability',
+            title: '违章概率',
+            align: 'center',
+            width: '10%'
         }, {
             field: 'updateTime',
             title: '告警时间',
@@ -133,10 +138,28 @@ var historyData = {
         for (var i = 0; i < array.length; i++) {
             var temp = array[i];
             var sequence = (page - 1) * this.pageSize + 1 + i;
+			var detectType = '';
+			if(temp.detectType == 1)
+			{
+				detectType = '安全帽';
+			}
+			else if(temp.detectType == 2)
+			{
+				detectType = '安全绳';
+			}
+			else if(temp.detectType == 3)
+			{
+				detectType = '着装';
+			}
+			else if(temp.detectType == 4)
+			{
+				detectType = '跨越围栏';
+			}
             var viewData = {
                 deviceId: temp.deviceId,
-                deviceType: temp.deviceType,
+                detectType: detectType,
                 updateTime: temp.updateTime,
+				probability: temp.probability + '%',
                 sequence: sequence,
                 imageUrl: temp.imageUrl
             };
