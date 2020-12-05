@@ -1,3 +1,6 @@
+var baseUrl = 'http://123.57.131.21:10031';
+var sockerUrl = 'ws://123.57.131.21:10031/server';
+
 var canvas,canvas2,canvas3;
 //decoder
 var decoder1,decoder2,decoder3;
@@ -102,11 +105,11 @@ function playVideo(num) {
 var websocket;
 // 首先判断是否 支持 WebSocket
 if ('WebSocket' in window) {
-    websocket = new WebSocket("ws://127.0.0.1:8000/server");
+    websocket = new WebSocket(sockerUrl);
 } else if ('MozWebSocket' in window) {
-    websocket = new MozWebSocket("ws://127.0.0.1:8000/server");
+    websocket = new MozWebSocket(sockerUrl);
 } else {
-    websocket = new SockJS("ws://127.0.0.1:8000/server");
+    websocket = new SockJS(sockerUrl);
 }
 
 websocket.onopen = function (evnt) {
@@ -123,12 +126,12 @@ websocket.onmessage = function (evnt) {
 		console.log('websocket连接服务器成功。');
 		return;
     }
-    console.log('数据已接收:' + evnt.data.detect);
     var data = $.parseJSON(event.data);
+	console.log('数据已接收:' + data.detect);
     if (data.detect != null && data.detect.length > 0) {
-        drawArea(data);
-        changeBottomImg(data);
         changeRealTimeViolation(data);
+		// changeBottomImg(data);
+		drawArea(data);
     }
 };
 
@@ -210,7 +213,7 @@ function drawArea(data) {
 function changeBottomImg(){
 
     $.ajax({
-        url: "http://127.0.0.1:8000/smartsafe/getBottomImage",
+        url: baseUrl + "/smartsafe/getBottomImage",
         type: 'get',
         async: false,
         success: function (data) {
@@ -236,37 +239,49 @@ function scrollDiv(data) {
     if (length>=6){
         var scrollHeight = $('.div_scroll div:first').height();
         //滚出一个li的高度
-        $dList.stop().animate({marginTop:-scrollHeight},600,function () {
+        $dList.stop().animate({marginTop:-scrollHeight},50,function () {
             //动画结束后
             var a=document.getElementsByClassName("div_scroll");
             var b=document.getElementsByClassName("realTimeViolation");
             //默认是从下标0开始，想要移除第二个就是a[1].remove();
             b[0].remove();
             $dList.css("marginTop",0);
-            var tempString = '';
-            if (data.detect!=null && data.detect.length>0){
-                for (var i=0;i<data.detect.length;i++){
-                    tempString =  data.detect.type+tempString;
+            if (data.detect != null && data.detect.length > 0){
+                for (var i = 0; i < data.detect.length; i++)
+            	{
+            		var tempDetect = data.detect[i];
+            		var array = [];
+            		array.push('<div class="realTimeViolation"><span>设备：');
+            		array.push(data.deviceId);
+            		array.push('，类型：');
+            		array.push(getDetectTypeStr(tempDetect.type));
+					array.push('，概率：');
+					array.push(tempDetect.probability);
+					array.push('%，时间：');
+					array.push(new Date(tempDetect.time).Format('yyyy-MM-dd hh:mm:ss'));
+            		array.push('。</span></div>');
+            		$dList.append(array.join(''));
                 }
             }
-			var array = [];
-			array.push("<div class='realTimeViolation'><span>设备");
-			array.push(data.deviceId);
-			array.push("发生</span><a href=''javascript:void();'>进入</a></div>")
-            $dList.append(array.join());
         })
     }else {
-        var tempString = '';
-        if (data.detect!=null && data.detect.length>0){
-            for (var i=0;i<data.detect.length;i++){
-                tempString = data.detect.type+tempString;
+        if (data.detect != null && data.detect.length > 0){
+            for (var i = 0; i < data.detect.length; i++)
+			{
+				var tempDetect = data.detect[i];
+				var array = [];
+				array.push('<div class="realTimeViolation"><span>设备：');
+				array.push(data.deviceId);
+				array.push('，类型：');
+				array.push(getDetectTypeStr(tempDetect.type));
+				array.push('，概率：');
+				array.push(tempDetect.probability);
+				array.push('%，时间：');
+				array.push(new Date(tempDetect.time).Format('yyyy-MM-dd hh:mm:ss'));
+				array.push('。</span></div>');
+				$dList.append(array.join(''));
             }
         }
-        var array = [];
-        array.push("<div class='realTimeViolation'><span>设备");
-        array.push(data.deviceId);
-        array.push("发生</span><a href=''javascript:void();'>进入</a></div>")
-        $dList.append(array.join());
     }
 }
 
@@ -274,6 +289,18 @@ setInterval(clearRect,5000);
 
 function clearRect() {
 
+}
+
+function getDetectTypeStr(type){
+	if(type == 1)
+		return '安全帽';
+	if(type == 2)
+		return '安全绳';
+	if(type == 3)
+		return '着装';
+	if(type == 4)
+		return '跨越围栏';
+	return '未知';
 }
 
 //每隔5秒更新底部图片

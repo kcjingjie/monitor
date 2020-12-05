@@ -1,5 +1,5 @@
 var historyData = {
-    baseUrl: 'http://127.0.0.1:8000/',
+    baseUrl: 'http://123.57.131.21:10031',
     tableData: [],
     pageSize: 10,
     sort: 0,/*时间排序标志位  0为倒序 1为正序*/
@@ -68,7 +68,7 @@ var historyData = {
             align: 'center',
             width: '10%'
         }, {
-            field: 'updateTime',
+            field: 'detectTime',
             title: '告警时间',
             align: 'center',
             width: '20%'
@@ -78,8 +78,9 @@ var historyData = {
             align: 'center',
             width: '10%',
             formatter: function (value, row, index) {
-                var html = '<button type="button" class="btn-video btn btn-success">视频</button>';
-                return html;
+                // var html = '<button type="button" class="btn-video btn btn-success">视频</button>';
+                // return html;
+				return '';
             }
         }
         ];
@@ -158,7 +159,7 @@ var historyData = {
             var viewData = {
                 deviceId: temp.deviceId,
                 detectType: detectType,
-                updateTime: temp.updateTime,
+                detectTime: temp.detectTime,
 				probability: temp.probability + '%',
                 sequence: sequence,
                 imageUrl: temp.imageUrl
