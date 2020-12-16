@@ -1,8 +1,8 @@
 var historyData = {
-    baseUrl: 'http://123.57.131.21:10031',
-    tableData: [],
-    pageSize: 10,
-    sort: 0,/*时间排序标志位  0为倒序 1为正序*/
+	baseUrl: 'http://123.57.131.21:10031',
+	tableData: [],
+	pageSize: 10,
+	sort: 0,/*时间排序标志位  0为倒序 1为正序*/
 
     /* 页面初始化 */
     init: function () {
@@ -104,6 +104,7 @@ var historyData = {
             this.showImage(value);
         }
     },
+	
     requestData: function () {
         var _this = this;
         var deviceId = $('#deviceId').val();
@@ -214,9 +215,11 @@ var historyData = {
             }
         });
     },
+	
     showImage: function (source) {
-        $("#ShowImage_Form").find("#img_show").html("<img src='" + source + "' style='width: 500px;margin:0 auto;margin-top: 200px;' class='carousel-inner img-responsive img-rounded' />");
-        $("#ShowImage_Form").modal('show');
+		window.open(source);
+        // $("#ShowImage_Form").find("#img_show").html("<img src='" + source + "' style='width: 500px;margin:0 auto;margin-top: 200px;' class='carousel-inner img-responsive img-rounded' />");
+        // $("#ShowImage_Form").modal('show');
     }
 };
 

@@ -8,6 +8,9 @@ var decoder1,decoder2,decoder3;
 var cxt1;
 var cxt2;
 var cxt3;
+var preBoxTime1 = 0;
+var preBoxTime2 = 0;
+var preBoxTime3 = 0;
 //更改图片的下标
 var changeIndex = 0;
 //滚动的dv
@@ -127,11 +130,11 @@ websocket.onmessage = function (evnt) {
 		return;
     }
     var data = $.parseJSON(event.data);
-	console.log('数据已接收:' + data.detect);
+	// console.log('数据已接收:' + data.detect);
     if (data.detect != null && data.detect.length > 0) {
         changeRealTimeViolation(data);
 		// changeBottomImg(data);
-		drawArea(data);
+		// drawArea(data);
     }
 };
 
@@ -182,6 +185,23 @@ function drawArea(data) {
 	
 	if(!tempCxt)
 		return;
+		
+	var tempDecoder;
+	if(index == 1)
+	{
+		preBoxTime1 = new Date().getTime();
+		tempDecoder = decoder1;
+	}
+	else if(index == 2)
+	{
+		preBoxTime2 = new Date().getTime();
+		tempDecoder = decoder2;
+	}
+	else if(index == 3)
+	{
+		preBoxTime3 = new Date().getTime();
+		tempDecoder = decoder3;
+	}
 	
     var canvas = document.getElementById('canvas' + index);
     var canvasWidth = canvas.offsetWidth;
@@ -194,20 +214,36 @@ function drawArea(data) {
     var container = document.getElementById('playercontainer' + index);
     var width = container.offsetWidth;
     var height = container.offsetWidth * 4 / 6;
-    var videoTime = getOSDTime(index);
-    //这里判断视频的时间和监测的时间匹配度 5秒
-    if (videoTime > data.detect.time){
-
-    }
-    for (var i = 0; i < data.detect.length; i++)
-	{
-        tempCxt.moveTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
-        for (var j = 0; j < data.detect[i].polygon.count; j++) {
-            tempCxt.lineTo(data.detect[i].polygon.position[j*2] / 100 * width, data.detect[i].polygon.position[j*2+1] / 100 * height);
-        }
-        tempCxt.lineTo(data.detect[i].polygon.position[0] / 100 * width, data.detect[i].polygon.position[1] / 100 * height);
-    }
-    tempCxt.stroke();
+	
+	var getOSDTimePromise = tempDecoder.getOSDTime();
+	getOSDTimePromise.then(function(videoTime){
+		//这里判断视频的时间和监测的时间匹配度 5秒
+		for (var i = 0; i < data.detect.length; i++)
+		{
+			var temp = data.detect[i];
+			var time = temp.time;
+			if(videoTime > time)
+			{
+				var d = videoTime - time;
+				console.log('===播放时间大于违章时间===，差值 = ' + d);
+			}
+			else
+			{	
+				var d = time - videoTime;
+				console.log('********播放时间小于违章时间*******，差值 = ' + d);
+			}
+			var position = temp.polygon.position;
+		    tempCxt.moveTo(position[0] / 100 * width, position[1] / 100 * height);
+		    for (var j = 0; j < temp.polygon.count; j++) {
+		        tempCxt.lineTo(position[j*2] / 100 * width, position[j*2+1] / 100 * height);
+		    }
+		    tempCxt.lineTo(position[0] / 100 * width, position[1] / 100 * height);
+		}
+		tempCxt.stroke();
+	});
+	
+    // var videoTime = getOSDTime(index);
+    
 }
 //更改下面的图片
 function changeBottomImg(){
@@ -236,59 +272,80 @@ function changeRealTimeViolation(data){
 function scrollDiv(data) {
     //获取div高度
     var length = $(".div_scroll").children().length;
-    if (length>=6){
-        var scrollHeight = $('.div_scroll div:first').height();
-        //滚出一个li的高度
-        $dList.stop().animate({marginTop:-scrollHeight},50,function () {
-            //动画结束后
-            var a=document.getElementsByClassName("div_scroll");
-            var b=document.getElementsByClassName("realTimeViolation");
-            //默认是从下标0开始，想要移除第二个就是a[1].remove();
-            b[0].remove();
-            $dList.css("marginTop",0);
-            if (data.detect != null && data.detect.length > 0){
-                for (var i = 0; i < data.detect.length; i++)
-            	{
-            		var tempDetect = data.detect[i];
-            		var array = [];
-            		array.push('<div class="realTimeViolation"><span>设备：');
-            		array.push(data.deviceId);
-            		array.push('，类型：');
-            		array.push(getDetectTypeStr(tempDetect.type));
-					array.push('，概率：');
-					array.push(tempDetect.probability);
-					array.push('%，时间：');
-					array.push(new Date(tempDetect.time).Format('yyyy-MM-dd hh:mm:ss'));
-            		array.push('。</span></div>');
-            		$dList.append(array.join(''));
-                }
-            }
-        })
-    }else {
-        if (data.detect != null && data.detect.length > 0){
-            for (var i = 0; i < data.detect.length; i++)
+	if (data.detect != null && data.detect.length > 0)
+	{
+	    for (var i = 0; i < data.detect.length; i++)
+		{
+			var tempDetect = data.detect[i];
+			var array = [];
+			array.push('<div class="realTimeViolation"><span>设备：');
+			array.push(data.deviceId);
+			array.push('，类型：');
+			array.push(getDetectTypeStr(tempDetect.type));
+			array.push('，概率：');
+			array.push(tempDetect.probability);
+			array.push('%，时间：');
+			array.push(new Date(tempDetect.time).Format('yyyy-MM-dd hh:mm:ss'));
+			array.push('。</span></div>');
+			if(length >= 13)
 			{
-				var tempDetect = data.detect[i];
-				var array = [];
-				array.push('<div class="realTimeViolation"><span>设备：');
-				array.push(data.deviceId);
-				array.push('，类型：');
-				array.push(getDetectTypeStr(tempDetect.type));
-				array.push('，概率：');
-				array.push(tempDetect.probability);
-				array.push('%，时间：');
-				array.push(new Date(tempDetect.time).Format('yyyy-MM-dd hh:mm:ss'));
-				array.push('。</span></div>');
+				var scrollHeight = $('.div_scroll div:first').height();
+				//滚出一个li的高度
+				$dList.stop().animate({marginTop:-scrollHeight},100,function () {
+				    //动画结束后
+				    var b = document.getElementsByClassName('realTimeViolation');
+				    //默认是从下标0开始，想要移除第二个就是a[1].remove();
+					// console.log('scrollHeight = ' + scrollHeight);
+				    b[0].remove();
+					$dList.append(array.join(''));
+				    $dList.css('marginTop',0);
+				});
+			}
+			else
+			{
 				$dList.append(array.join(''));
-            }
-        }
-    }
+				length += 1;
+			}
+	    }
+	}
 }
 
-setInterval(clearRect,5000);
+setInterval(clearRect,1000);
 
 function clearRect() {
-
+	var tempTime = new Date().getTime();
+	if(cxt1)
+	{
+		if(tempTime - preBoxTime1 > 5000)
+		{
+			var canvas = document.getElementById('canvas1');
+			var canvasWidth = canvas.width;
+			var canvasHeight = canvas.height;
+			cxt1.clearRect(0, 0, canvasWidth, canvasHeight);
+		}
+	}
+	
+	if(cxt2)
+	{
+		if(tempTime - preBoxTime2 > 5000)
+		{
+			var canvas = document.getElementById('canvas2');
+			var canvasWidth = canvas.width;
+			var canvasHeight = canvas.height;
+			cxt2.clearRect(0, 0, canvasWidth, canvasHeight);
+		}
+	}
+	
+	if(cxt3)
+	{
+		if(tempTime - preBoxTime3 > 5000)
+		{
+			var canvas = document.getElementById('canvas3');
+			var canvasWidth = canvas.width;
+			var canvasHeight = canvas.height;
+			cxt3.clearRect(0, 0, canvasWidth, canvasHeight);
+		}
+	}	
 }
 
 function getDetectTypeStr(type){
@@ -316,5 +373,7 @@ function getOSDTime(index){
         tempDecoder = decoder3;
     }
     var getOSDTimePromise = tempDecoder.getOSDTime();
-    return getOSDTimePromise;
+	getOSDTimePromise.then(function(data){
+	    return data;
+	})
 }
