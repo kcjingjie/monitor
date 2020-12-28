@@ -1,8 +1,8 @@
 var historyData = {
-    baseUrl: 'http://127.0.0.1:8000/',
-    tableData: [],
-    pageSize: 10,
-    sort: 0,/*时间排序标志位  0为倒序 1为正序*/
+	baseUrl: 'http://123.57.131.21:10031',
+	tableData: [],
+	pageSize: 10,
+	sort: 0,/*时间排序标志位  0为倒序 1为正序*/
 
     /* 页面初始化 */
     init: function () {
@@ -39,13 +39,13 @@ var historyData = {
         var columns = [{
             field: 'sequence',
             title: '序号',
-            width: '5%',
+            width: '10%',
             align: 'center'
         }, {
             field: 'imageUrl',
             align: 'center',
             title: '告警图片',
-            width: '30%',
+            width: '20%',
             formatter: function (value, row, index) {
                 var html = '<div class="div-news-button">' +
                     '<img src="' + value + '" width="100px" height="80px"/>'
@@ -62,8 +62,13 @@ var historyData = {
             title: '摄像头编号',
             align: 'center',
             width: '15%'
+        },{
+            field: 'probability',
+            title: '违章概率',
+            align: 'center',
+            width: '10%'
         }, {
-            field: 'updateTime',
+            field: 'detectTime',
             title: '告警时间',
             align: 'center',
             width: '20%'
@@ -73,8 +78,9 @@ var historyData = {
             align: 'center',
             width: '10%',
             formatter: function (value, row, index) {
-                var html = '<button type="button" class="btn-video btn btn-success">视频</button>';
-                return html;
+                // var html = '<button type="button" class="btn-video btn btn-success">视频</button>';
+                // return html;
+				return '';
             }
         }
         ];
@@ -98,6 +104,7 @@ var historyData = {
             this.showImage(value);
         }
     },
+	
     requestData: function () {
         var _this = this;
         var deviceId = $('#deviceId').val();
@@ -133,10 +140,28 @@ var historyData = {
         for (var i = 0; i < array.length; i++) {
             var temp = array[i];
             var sequence = (page - 1) * this.pageSize + 1 + i;
+			var detectType = '';
+			if(temp.detectType == 1)
+			{
+				detectType = '安全帽';
+			}
+			else if(temp.detectType == 2)
+			{
+				detectType = '安全绳';
+			}
+			else if(temp.detectType == 3)
+			{
+				detectType = '着装';
+			}
+			else if(temp.detectType == 4)
+			{
+				detectType = '跨越围栏';
+			}
             var viewData = {
                 deviceId: temp.deviceId,
-                deviceType: temp.deviceType,
-                updateTime: temp.updateTime,
+                detectType: detectType,
+                detectTime: temp.detectTime,
+				probability: temp.probability + '%',
                 sequence: sequence,
                 imageUrl: temp.imageUrl
             };
@@ -190,9 +215,11 @@ var historyData = {
             }
         });
     },
+	
     showImage: function (source) {
-        $("#ShowImage_Form").find("#img_show").html("<img src='" + source + "' style='width: 500px;margin:0 auto;margin-top: 200px;' class='carousel-inner img-responsive img-rounded' />");
-        $("#ShowImage_Form").modal('show');
+		window.open(source);
+        // $("#ShowImage_Form").find("#img_show").html("<img src='" + source + "' style='width: 500px;margin:0 auto;margin-top: 200px;' class='carousel-inner img-responsive img-rounded' />");
+        // $("#ShowImage_Form").modal('show');
     }
 };
 

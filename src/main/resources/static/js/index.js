@@ -254,20 +254,6 @@ function scrollDiv(data) {
 setInterval(clearRect,5000);
 
 function clearRect() {
-    for(var index =0;index<3;index++){
-        var canvas = document.getElementById("canvas"+index);
-        if (canvas != null && canvas !=undefined){
-            var canvasWidth = canvas.offsetWidth;
-            var canvasHeight = canvas.offsetWidth * 4 / 6;
-            canvas.height = 0;
-            canvas.width = 0;
-            canvas.height =canvasHeight;
-            canvas.width = canvasWidth;
-            var tempCxt = canvas2.getContext("2d");
-            tempCxt.clearRect(0, 0, canvasWidth, canvasHeight);
-        }
-
-    }
 
 }
 
