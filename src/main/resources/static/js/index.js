@@ -254,7 +254,39 @@ function scrollDiv(data) {
 setInterval(clearRect,5000);
 
 function clearRect() {
+    var tempTime = new Date().getTime();
+    if(cxt1)
+    {
+        if(tempTime - preBoxTime1 > 5000)
+        {
+            var canvas = document.getElementById('canvas1');
+            var canvasWidth = canvas.width;
+            var canvasHeight = canvas.height;
+            cxt1.clearRect(0, 0, canvasWidth, canvasHeight);
+        }
+    }
 
+    if(cxt2)
+    {
+        if(tempTime - preBoxTime2 > 5000)
+        {
+            var canvas = document.getElementById('canvas2');
+            var canvasWidth = canvas.width;
+            var canvasHeight = canvas.height;
+            cxt2.clearRect(0, 0, canvasWidth, canvasHeight);
+        }
+    }
+
+    if(cxt3)
+    {
+        if(tempTime - preBoxTime3 > 5000)
+        {
+            var canvas = document.getElementById('canvas3');
+            var canvasWidth = canvas.width;
+            var canvasHeight = canvas.height;
+            cxt3.clearRect(0, 0, canvasWidth, canvasHeight);
+        }
+    }
 }
 
 //每隔5秒更新底部图片
