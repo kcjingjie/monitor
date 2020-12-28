@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实时监控</title>
+</head>
+<link rel="stylesheet" href="../viewcss/index.css"/>
+<link rel="stylesheet" href="../css/bootstrap.css">
+<!-- If you'd like to support IE8 -->
+<link href="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.css" rel="stylesheet">
+<script src="../scripts/jquery.js"></script>
+<script src="../scripts/bootstrap.js"></script>
+<script src="../js/ezuikit.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
+<script src="https://open.ys7.com/sdk/js/2.0/ezuikit.js"></script>
+
+
+<body>
+<div class="videoContent">
+    <div class="head">
+        <h1>视频安监</h1>
+    </div>
+    <div style="margin-top: 10px;">
+        <div class="videoSingle row" style="margin: auto">
+            <div class="video col-md-4 col-lg-4">
+                <div class="input-group">
+                    <input  type="text" id="url1" class="form-control" placeholder="播放地址">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="button" onclick="playVideo(1)">播放</button>
+                     </span>
+                </div><!-- /input-group -->
+                <div style="height: 100%;width: 100%;position: relative;">
+                    <video id="playercontainer1" style="width: 100%;" controls playsInline webkit-playsinline autoplay>
+                        <source id="source_1" src="" type="rtmp/flv" />
+                    </video>
+                </div>
+            </div>
+            <div class="video col-md-4 col-lg-4">
+                <div class="input-group">
+                    <input type="text" id="url2" class="form-control" placeholder="播放地址">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="button" onclick="playVideo(2)">播放</button>
+                         </span>
+                </div><!-- /input-group -->
+                <div style="height: 100%;width: 100%;">
+                    <video id="playercontainer2" style="width: 100%;" controls playsInline webkit-playsinline autoplay>
+                        <source id="source_2" src="" type="rtmp/flv" />
+                    </video>
+                </div>
+            </div>
+            <div class="video col-md-4 col-lg-4">
+                <div class="input-group">
+                    <input type="text" id="url3" class="form-control" placeholder="播放地址">
+                    <span class="input-group-btn">
+                         <button class="btn btn-default" type="button" onclick="playVideo(3)">播放</button>
+                     </span>
+                </div><!-- /input-group -->
+                <div style="height: 100%;width: 100%;">
+                    <video id="playercontainer3" style="width: 100%;" controls playsInline webkit-playsinline autoplay>
+                        <source id="source_3" src="" type="rtmp/flv" />
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="div_bottom">
+        <div class="div_bottom_left">
+            <div class="div_bottom_img">
+                <img class="bottom_img" id="bottom_img1" src="http://localhost:8001/images/map.jpeg"/>
+            </div>
+            <div class="div_bottom_img">
+                <img class="bottom_img" id="bottom_img2" src="http://localhost:8001/images/map.jpeg"/>
+            </div>
+            <div class="div_bottom_img">
+                <img class="bottom_img" id="bottom_img3" src="http://localhost:8001/images/map.jpeg"/>
+            </div>
+        </div>
+        <div class="div_bottom_right">
+            <div class="div_scroll">
+                <div class="realTimeViolation">
+                    <span>设备E234234523发生安全帽未佩戴告警</span>
+					<a href="javascript:void();">进入</a>
+                </div>
+                <div class="realTimeViolation">
+                    <span>设备E234233323着装不正确告警</span>
+                    <a href="javascript:void();">进入</a>
+                </div>
+                <div class="realTimeViolation">
+                    <span>设备E234234523发生安全帽未佩戴告警</span>
+                    <a href="javascript:void();">进入</a>
+                </div>
+                <div class="realTimeViolation">
+                    <span>设备E234234523发生安全帽未佩戴告警</span>
+                    <a href="javascript:void();">进入</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="../js/index-rtmp.js"></script>
