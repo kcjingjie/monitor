@@ -1,6 +1,6 @@
 //通用的http请求：get、post，封装了对请求成功和错误的处理。
 var requestUtil = {
-	baseUrl : 'http://123.57.131.21:10031/',
+	baseUrl : 'http://localhost:8002/',
 	get : function(url, data, onSuccess, onError){
 		var args = {
 			args : arguments

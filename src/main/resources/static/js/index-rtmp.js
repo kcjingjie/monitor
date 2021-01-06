@@ -1,5 +1,5 @@
-var baseUrl = 'http://123.57.131.21:10031';
-var sockerUrl = 'ws://123.57.131.21:10031/server';
+var baseUrl = 'http://localhost:8002';
+var sockerUrl = 'ws://localhost:8002/server';
 
 //滚动的dv
 var $dList = $('.div_scroll');
@@ -14,8 +14,8 @@ function initContainer() {
     container.style.height = containerHeight+'px';
     container2.style.height =  containerHeight+'px';
     container3.style.height =  containerHeight+'px';
-
 }
+
 
 var websocket;
 // 首先判断是否 支持 WebSocket

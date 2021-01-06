@@ -1,5 +1,5 @@
 var historyData = {
-	baseUrl: 'http://123.57.131.21:10031',
+	baseUrl: 'http://localhost:8002',
 	tableData: [],
 	pageSize: 10,
 	sort: 0,/*时间排序标志位  0为倒序 1为正序*/
@@ -7,6 +7,7 @@ var historyData = {
     /* 页面初始化 */
     init: function () {
         this.initTimepicker();
+        this.initDeviceIdAndType();
         var _this = this;
         $('#btn-search').click(function () {
             _this.requestData();
@@ -33,7 +34,28 @@ var historyData = {
             });
         }
     },
+    initDeviceIdAndType:function(){
+        $.ajax({
+            method:'get',
+            url: this.baseUrl + '/smartsafe/getDeviceIdAndType',
+            success:function (res) {
+                var data = res.data;
+                if (data.deviceIds!=null && data.deviceIds.length>0){
+                    for(var i = 0; i < data.deviceIds.length; i++)
+                    {
+                        $('#deviceId').append('<option value="' + data.deviceIds[i] + '">' + data.deviceIds[i] + '</option>');
+                    }
+                }
+                if (data.deviceTypes){
+                    for(var i = 0; i < data.deviceTypes.length; i++)
+                    {
+                        $('#deviceType').append('<option value="' + data.deviceTypes[i] + '">' + data.deviceTypes[i] + '</option>');
+                    }
+                }
 
+            }
+        })
+    },
     initBootstrapTable: function () {
         var _this = this;
         var columns = [{
@@ -57,6 +79,11 @@ var historyData = {
             title: '告警类型',
             width: '15%',
             align: 'center'
+        },{
+            field: 'deviceType',
+            title: '设备类型',
+            width: '10%',
+            align: 'center'
         }, {
             field: 'deviceId',
             title: '摄像头编号',
@@ -72,16 +99,6 @@ var historyData = {
             title: '告警时间',
             align: 'center',
             width: '20%'
-        }, {
-            field: 'publishInfo',
-            title: '视频',
-            align: 'center',
-            width: '10%',
-            formatter: function (value, row, index) {
-                // var html = '<button type="button" class="btn-video btn btn-success">视频</button>';
-                // return html;
-				return '';
-            }
         }
         ];
 
@@ -108,6 +125,7 @@ var historyData = {
     requestData: function () {
         var _this = this;
         var deviceId = $('#deviceId').val();
+        var deviceType = $('#deviceType').val();
         var detectType = $('#detectType').val();
         var startTime = $('#time1').val();
         var endTime = $('#time2').val();
@@ -117,6 +135,7 @@ var historyData = {
             endTime: endTime,
             deviceId: deviceId,
             detectType: detectType,
+            deviceType:deviceType,
             pageSize: 10
         };
         requestUtil.get("/smartsafe/edge/cloud/events", data, this.onSuccessHandler.bind(this), null);
@@ -163,7 +182,8 @@ var historyData = {
                 detectTime: temp.detectTime,
 				probability: temp.probability + '%',
                 sequence: sequence,
-                imageUrl: temp.imageUrl
+                imageUrl: temp.imageUrl,
+                deviceType:temp.deviceType
             };
             tableDatas.push(viewData);
         }
@@ -192,6 +212,7 @@ var historyData = {
     toPage: function (page) {
         var _this = this;
         var deviceId = $('#deviceId').val();
+        var deviceType = $('#deviceType').val();
         var detectType = $('#detectType').val();
         var startTime = $('#time1').val();
         var endTime = $('#time2').val();
@@ -205,6 +226,7 @@ var historyData = {
                 endTime: endTime,
                 deviceId: deviceId,
                 detectType: detectType,
+                deviceType:deviceType,
                 pageSize: 10
             },
             success: function (data) {
