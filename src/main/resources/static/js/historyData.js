@@ -1,17 +1,24 @@
 var historyData = {
-	baseUrl: 'http://localhost:8002',
+	baseUrl: 'http://127.0.0.1:10031',
 	tableData: [],
 	pageSize: 10,
 	sort: 0,/*时间排序标志位  0为倒序 1为正序*/
 
     /* 页面初始化 */
     init: function () {
+		var _this = this;
         this.initTimepicker();
-        this.initDeviceIdAndType();
+        this.initDeviceType();
+		this.initDeviceId('全部');
         var _this = this;
         $('#btn-search').click(function () {
             _this.requestData();
         });
+		
+		$('#deviceType').change(function (data) {
+			var value = $('#deviceType option:selected').attr('value');
+			_this.initDeviceId(value);
+		});
         /* table不能反复销毁和重建，会影响性能，应该只初始化一次 */
         this.initBootstrapTable();
         /* 初始化完成后，开始执行业务流程，搜索数据 */
@@ -34,18 +41,13 @@ var historyData = {
             });
         }
     },
-    initDeviceIdAndType:function(){
+	
+    initDeviceType:function(){
         $.ajax({
             method:'get',
-            url: this.baseUrl + '/smartsafe/getDeviceIdAndType',
+            url: this.baseUrl + '/smartsafe/listDeviceType',
             success:function (res) {
                 var data = res.data;
-                if (data.deviceIds!=null && data.deviceIds.length>0){
-                    for(var i = 0; i < data.deviceIds.length; i++)
-                    {
-                        $('#deviceId').append('<option value="' + data.deviceIds[i] + '">' + data.deviceIds[i] + '</option>');
-                    }
-                }
                 if (data.deviceTypes){
                     for(var i = 0; i < data.deviceTypes.length; i++)
                     {
@@ -54,8 +56,27 @@ var historyData = {
                 }
 
             }
-        })
+        });
     },
+	
+	initDeviceId : function(deviceType){
+		document.querySelector('#deviceId').innerHTML = '<option value="全部">全部</option>';
+		$.ajax({
+		    method:'get',
+		    url: this.baseUrl + '/smartsafe/listDeviceIdByType',
+			data: {'deviceType' : deviceType},
+		    success:function (res) {
+		        var data = res.data;
+		        if (data.deviceIds != null && data.deviceIds.length > 0){
+		            for(var i = 0; i < data.deviceIds.length; i++)
+		            {
+		                $('#deviceId').append('<option value="' + data.deviceIds[i] + '">' + data.deviceIds[i] + '</option>');
+		            }
+		        }
+		    }
+		});
+	},
+	
     initBootstrapTable: function () {
         var _this = this;
         var columns = [{
@@ -143,14 +164,11 @@ var historyData = {
 
     /* 函数最好不要定义在另一个常调用的函数中，内存无法回收 */
     onSuccessHandler: function (response) {
-        var data = response.data.data;
-        var msg = response.data.msg;
+        var data = response.data;
         if (data != null) {
-            if (msg == 'OK') {
-                var array = data.data;
-                this.parseData(array, 1);
-                this.initPage(data.total);
-            }
+            var array = data.data;
+            this.parseData(array, 1);
+            this.initPage(data.total);
         }
     },
 
