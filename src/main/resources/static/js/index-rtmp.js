@@ -16,7 +16,6 @@ function initContainer() {
     container3.style.height =  containerHeight+'px';
 }
 
-
 var websocket;
 // 首先判断是否 支持 WebSocket
 if ('WebSocket' in window) {
@@ -57,6 +56,11 @@ websocket.onerror = function (evnt) {
 websocket.onclose = function (evnt) {
     console.log('ws clent:close ');
 }
+
+function log(str){
+
+}
+
 function playVideo(num) {
     var url = $('#url' + num).val().trim();
     if (url == ''){
@@ -68,14 +72,12 @@ function playVideo(num) {
     var player = new EZuikit.EZUIPlayer("playercontainer"+num);
     // 日志
     player.on('log', log);
-
-    function log(str){
-
-    }
 }
+
+
+
 //更改下面的图片
 function changeBottomImg(){
-
     $.ajax({
         url: baseUrl + "/smartsafe/getBottomImage",
         type: 'get',
@@ -152,18 +154,3 @@ function getDetectTypeStr(type){
 
 //每隔5秒更新底部图片
 setInterval(changeBottomImg,5000);
-
-function getOSDTime(index){
-    var tempDecoder;
-    if (index == 1){
-        tempDecoder = decoder1;
-    }else if( index == 2){
-        tempDecoder = decoder2;
-    }else {
-        tempDecoder = decoder3;
-    }
-    var getOSDTimePromise = tempDecoder.getOSDTime();
-    getOSDTimePromise.then(function(data){
-        return data;
-    })
-}

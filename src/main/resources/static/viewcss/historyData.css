@@ -30,15 +30,15 @@
 }
 #deviceId {
     height: 26px;
-    width: 100px;
+    width: 150px;
 }
 #deviceType {
     height: 26px;
-    width: 100px;
+    width: 150px;
 }
 
 #time1, #time2 {
-	width: 150px;
+	width: 110px;
 }
 
 .div_query button {

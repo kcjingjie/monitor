@@ -82,13 +82,13 @@ var historyData = {
         var columns = [{
             field: 'sequence',
             title: '序号',
-            width: '10%',
+            width: '5%',
             align: 'center'
         }, {
             field: 'imageUrl',
             align: 'center',
             title: '告警图片',
-            width: '20%',
+            width: '15%',
             formatter: function (value, row, index) {
                 var html = '<div class="div-news-button">' +
                     '<img src="' + value + '" width="100px" height="80px"/>'
@@ -103,11 +103,11 @@ var historyData = {
         },{
             field: 'deviceType',
             title: '设备类型',
-            width: '10%',
+            width: '20%',
             align: 'center'
         }, {
             field: 'deviceId',
-            title: '摄像头编号',
+            title: '设备编号',
             align: 'center',
             width: '15%'
         },{
